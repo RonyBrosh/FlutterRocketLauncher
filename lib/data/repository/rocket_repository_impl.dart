@@ -9,8 +9,8 @@ class RocketRepositoryImpl implements RocketRepository {
   final RocketApiService _rocketApiService;
 
   @override
-  Future<ResultState<List<Rocket>>> getRockets() {
-    return _rocketApiService.getRockets().catchError((error) {
+  Future<ResultState<List<Rocket>>> refreshRockets() {
+    return _rocketApiService.fetchRockets().catchError((error) {
       return ResultStateFailure<List<Rocket>>(FailureReason.UNKNOWN);
     });
   }

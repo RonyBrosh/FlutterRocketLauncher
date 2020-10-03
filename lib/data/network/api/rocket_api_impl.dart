@@ -12,7 +12,7 @@ class RocketApiImpl extends RocketApi {
   final Client _client;
 
   @override
-  Future<ApiState<List<ApiRocket>>> getRockets() async {
+  Future<ApiState<List<ApiRocket>>> fetchRockets() async {
     try {
       final response = await _client.get('https://api.spacexdata.com/v4/rockets');
       if (response.statusCode == 200) {

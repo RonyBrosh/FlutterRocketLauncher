@@ -22,34 +22,34 @@ void main() {
   final Mapper<int, FailureReason> failureReasonMapper = MockApiErrorCodeToDomainFailureReasonMapper();
   final RocketApiServiceImpl sut = RocketApiServiceImpl(rocketApi, apiToDomainRocketMapper, failureReasonMapper);
 
-  test("getRockets SHOULD return failure WHEN api return failure", () async {
-    when(rocketApi.getRockets()).thenAnswer((_) => Future.value(ApiStateFailure(500)));
+  test("fetchRockets SHOULD return failure WHEN api return failure", () async {
+    when(rocketApi.fetchRockets()).thenAnswer((_) => Future.value(ApiStateFailure(500)));
 
-    ResultState<List<Rocket>> resultState = await sut.getRockets();
+    ResultState<List<Rocket>> resultState = await sut.fetchRockets();
 
     expect(resultState, isA<ResultStateFailure>());
   });
 
-  test("getRockets SHOULD return failure WHEN api fail", () async {
+  test("fetchRockets SHOULD return failure WHEN api fail", () async {
     Exception error = Exception("Can't fetch rockets");
-    when(rocketApi.getRockets()).thenAnswer((_) => Future.error(error));
+    when(rocketApi.fetchRockets()).thenAnswer((_) => Future.error(error));
     when(failureReasonMapper.map(API_ERROR_CODE_UNKNOWN)).thenAnswer((_) => FailureReason.UNKNOWN);
 
-    ResultState<List<Rocket>> resultState = await sut.getRockets();
+    ResultState<List<Rocket>> resultState = await sut.fetchRockets();
 
     expect(resultState, isA<ResultStateFailure<List<Rocket>>>());
     expect((resultState as ResultStateFailure<List<Rocket>>).reason, FailureReason.UNKNOWN);
   });
 
-  test("getRockets SHOULD return success with data WHEN api succeed", () async {
+  test("fetchRockets SHOULD return success with data WHEN api succeed", () async {
     ApiRocket apiRocket = ApiRocket.makeRocket();
     List<ApiRocket> response = [apiRocket];
     Rocket rocket = Rocket.makeRocket();
     List<Rocket> data = [rocket];
     when(apiToDomainRocketMapper.map(apiRocket)).thenAnswer((_) => rocket);
-    when(rocketApi.getRockets()).thenAnswer((_) => Future.value(ApiStateSuccess<List<ApiRocket>>(response)));
+    when(rocketApi.fetchRockets()).thenAnswer((_) => Future.value(ApiStateSuccess<List<ApiRocket>>(response)));
 
-    ResultState<List<Rocket>> resultState = await sut.getRockets();
+    ResultState<List<Rocket>> resultState = await sut.fetchRockets();
 
     expect(resultState, isA<ResultStateSuccess<List<Rocket>>>());
     expect((resultState as ResultStateSuccess<List<Rocket>>).data, data);

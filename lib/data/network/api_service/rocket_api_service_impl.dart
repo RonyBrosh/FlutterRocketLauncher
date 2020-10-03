@@ -17,8 +17,8 @@ class RocketApiServiceImpl implements RocketApiService {
   final Mapper<int, FailureReason> _failureReasonMapper;
 
   @override
-  Future<ResultState<List<Rocket>>> getRockets() async {
-    ApiState<List<ApiRocket>> apiState = await _rocketApi.getRockets().catchError((error) {
+  Future<ResultState<List<Rocket>>> fetchRockets() async {
+    ApiState<List<ApiRocket>> apiState = await _rocketApi.fetchRockets().catchError((error) {
       return ApiStateFailure<List<ApiRocket>>(API_ERROR_CODE_UNKNOWN);
     });
 

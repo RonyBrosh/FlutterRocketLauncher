@@ -13,19 +13,19 @@ void main() {
   final RocketApiService rocketApiService = MockRocketApiService();
   final RocketRepositoryImpl sut = RocketRepositoryImpl(rocketApiService);
 
-  test("getRockets SHOULD return ResultState WHEN api service succeed", () async {
-    when(rocketApiService.getRockets()).thenAnswer((_) => Future.value(ResultStateFailure(FailureReason.UNKNOWN)));
+  test("refreshRockets SHOULD return ResultState WHEN api service succeed", () async {
+    when(rocketApiService.fetchRockets()).thenAnswer((_) => Future.value(ResultStateFailure(FailureReason.UNKNOWN)));
 
-    ResultState<List<Rocket>> resultState = await sut.getRockets();
+    ResultState<List<Rocket>> resultState = await sut.refreshRockets();
 
     expect(resultState, isA<ResultState>());
   });
 
-  test("getRockets SHOULD return failure WHEN api service fail", () async {
+  test("refreshRockets SHOULD return failure WHEN api service fail", () async {
     Exception error = Exception("Can't get rockets");
-    when(rocketApiService.getRockets()).thenAnswer((_) => Future.error(error));
+    when(rocketApiService.fetchRockets()).thenAnswer((_) => Future.error(error));
 
-    ResultState<List<Rocket>> resultState = await sut.getRockets();
+    ResultState<List<Rocket>> resultState = await sut.refreshRockets();
 
     expect(resultState, isA<ResultStateFailure<List<Rocket>>>());
     expect((resultState as ResultStateFailure<List<Rocket>>).reason, FailureReason.UNKNOWN);
